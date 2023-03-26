@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ChatBody = () => {
+const ChatBody = ({ messages }) => {
   const navigate = useNavigate();
 
   const handleLeaveChat = () => {
@@ -9,6 +9,11 @@ const ChatBody = () => {
     navigate("/");
     window.location.reload();
   };
+
+  useEffect(() => {
+    console.log(messages);
+    // console.log(localStorage.getItem("userName"));
+  }, [messages]);
 
   return (
     <>
@@ -21,20 +26,23 @@ const ChatBody = () => {
 
       {/*This shows messages sent from you*/}
       <div className="message__container">
-        <div className="message__chats">
-          <p className="sender__name">You</p>
-          <div className="message__sender">
-            <p>Hello there</p>
-          </div>
-        </div>
-
-        {/*This shows messages received by you*/}
-        <div className="message__chats">
-          <p>Other</p>
-          <div className="message__recipient">
-            <p>Hey, I'm good, you?</p>
-          </div>
-        </div>
+        {messages.map((item) =>
+          item.name == localStorage.getItem("userName") ? (
+            <div className="message__chats" key={item.id}>
+              <p className="sender__name">You</p>
+              <div className="message__sender">
+                <p>{item.text}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="message__chats" key={item.id}>
+              <p>{item.name}</p>
+              <div className="message__recepient">
+                <p>{item.text}</p>
+              </div>
+            </div>
+          )
+        )}
 
         {/*This is triggered when a user is typing*/}
         <div className="message__status">
